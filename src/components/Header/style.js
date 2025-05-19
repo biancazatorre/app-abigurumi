@@ -1,0 +1,65 @@
+import { StyleSheet, Platform } from 'react-native';
+
+export default StyleSheet.create({
+  
+header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#eee',
+  },
+  headerIcon: {
+    width: 40,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'relative',
+  },
+  cartBadge: {
+    position: 'absolute',
+    right: 5,
+    top: 5,
+    backgroundColor: '#E359EC',
+    borderRadius: 10,
+    width: 18,
+    height: 18,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  cartBadgeText: {
+    color: 'white',
+    fontSize: 10,
+    fontWeight: 'bold',
+  },
+  searchContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    borderRadius: 20,
+    paddingHorizontal: 15,
+    marginHorizontal: 8,
+    height: 40,
+    borderWidth: 1,
+    borderColor: '#ddd',
+     dth: '60%',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
+  },
+  searchInput: {
+    flex: 1,
+    height: '100%',
+    fontSize: 14,
+    color: '#333',
+    paddingVertical: Platform.OS === 'ios' ? 8 : 0,
+  },
+  searchButton: {
+    padding: 5,
+  },
+});
