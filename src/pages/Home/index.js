@@ -1,48 +1,83 @@
-import React, { useState } from 'react';
-import {View, Text, Image, ImageBackground, FlatList,TouchableOpacity, Dimensions, SafeAreaView, StatusBar} from 'react-native';
+import React, { useState, useEffect } from 'react';
+import {
+  View,
+  Text,
+  Image,
+  ImageBackground,
+  FlatList,
+  TouchableOpacity,
+  SafeAreaView,
+  StatusBar,
+} from 'react-native';
 import styles from './style';
 import galeriaStyles from '../../components/Carrossel/style';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Header from '../../components/Header/index';
 import ImageGallery from '../../components/Carrossel/index';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const produtos = [
   {
     id: '1',
     nome: 'Coelho',
     preco: 'R$ 50,00 ou 2x de R$25,00',
-    imagem: require('../../../assets/images/COELHO.png')
+    imagem: require('../../../assets/images/COELHO.png'),
   },
   {
     id: '2',
     nome: 'Sereia',
     preco: 'R$ 100,00 ou 4x de R$25,00',
-    imagem: require('../../../assets/images/SEREIA.png')
+    imagem: require('../../../SEREIA.png'),
   },
   {
     id: '3',
     nome: 'Mochila',
     preco: 'R$ 110,00 ou 5x de R$27,50',
-    imagem: require('../../../assets/images/MOCHILA.png')
-  }
+    imagem: require('../../../assets/images/MOCHILA.png'),
+  },
 ];
 
 const banners = [
   require('../../../assets/images/banner.png'),
-  require('../../../assets/images/banner.png')
+  require('../../../assets/images/banner.png'),
 ];
 
 export default function Home({ navigation }) {
   const [menuVisible, setMenuVisible] = useState(false);
   const [favoritos, setFavoritos] = useState([]);
 
-  const toggleFavorito = (id) => {
-    setFavoritos((prev) =>
-      prev.includes(id) ? prev.filter((favId) => favId !== id) : [...prev, id]
-    );
+  useEffect(() => {
+  const carregarFavoritos = async () => {
+    const json = await AsyncStorage.getItem('favoritos');
+    if (json) {
+      setFavoritos(JSON.parse(json));
+    } else {
+      setFavoritos([]);
+    }
   };
 
-  const isFavorito = (id) => favoritos.includes(id);
+  carregarFavoritos();
+
+  // Atualizar sempre que a tela voltar ao foco
+  const unsubscribe = navigation.addListener('focus', carregarFavoritos);
+
+  return unsubscribe;
+}, [navigation]);
+
+
+  const toggleFavorito = async (produto) => {
+    const existe = favoritos.find((item) => item.id === produto.id);
+    let novaLista;
+    if (existe) {
+      novaLista = favoritos.filter((item) => item.id !== produto.id);
+    } else {
+      novaLista = [...favoritos, produto];
+    }
+    setFavoritos(novaLista);
+    await AsyncStorage.setItem('favoritos', JSON.stringify(novaLista));
+  };
+
+  const isFavorito = (id) => favoritos.some((item) => item.id === id);
 
   return (
     <SafeAreaView style={{ flex: 1, marginTop: StatusBar.currentHeight || 0 }}>
@@ -88,11 +123,7 @@ export default function Home({ navigation }) {
           }
           renderItem={({ item }) => (
             <View style={styles.cardContainer}>
-              <Image
-                source={item.imagem}
-                style={styles.cardImage}
-                resizeMode="cover"
-              />
+              <Image source={item.imagem} style={styles.cardImage} />
 
               <View style={styles.cardInfo}>
                 <Text style={styles.cardTitle}>{item.nome}</Text>
@@ -100,7 +131,7 @@ export default function Home({ navigation }) {
 
                 <TouchableOpacity
                   style={styles.removerContainer}
-                  onPress={() => toggleFavorito(item.id)}
+                  onPress={() => toggleFavorito(item)}
                 >
                   <Icon
                     name={isFavorito(item.id) ? 'heart' : 'heart-o'}
