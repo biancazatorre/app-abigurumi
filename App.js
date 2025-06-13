@@ -10,7 +10,8 @@ import Cadastro from './src/pages/Cadastro/index';
 import Favoritos from './src/pages/Favoritos/index';
 import Leao from './src/pages/Leao/index';
 import Coelho from './src/pages/Coelho/index';
-import Sobre from './src/pages/Sobre/index'
+import Sobre from './src/pages/Sobre/index';
+import Carrinho from './src/pages/Carrinho/index'
 
 
 
@@ -32,6 +33,7 @@ export default function App() {
         <Stack.Screen name="Leao" component={Leao} />
         <Stack.Screen name="Coelho" component={Coelho} />
         <Stack.Screen name="Sobre" component={Sobre} />
+        <Stack.Screen name="Carrinho" component={Carrinho} />
 
       </Stack.Navigator>
     </NavigationContainer>

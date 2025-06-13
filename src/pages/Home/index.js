@@ -27,7 +27,7 @@ const produtos = [
     id: '2',
     nome: 'Sereia',
     preco: 'R$ 100,00 ou 4x de R$25,00',
-    imagem: require('../../../SEREIA.png'),
+    imagem: require('../../../assets/images/SEREIA.png'),
   },
   {
     id: '3',
@@ -47,23 +47,19 @@ export default function Home({ navigation }) {
   const [favoritos, setFavoritos] = useState([]);
 
   useEffect(() => {
-  const carregarFavoritos = async () => {
-    const json = await AsyncStorage.getItem('favoritos');
-    if (json) {
-      setFavoritos(JSON.parse(json));
-    } else {
-      setFavoritos([]);
-    }
-  };
+    const carregarFavoritos = async () => {
+      const json = await AsyncStorage.getItem('favoritos');
+      if (json) {
+        setFavoritos(JSON.parse(json));
+      } else {
+        setFavoritos([]);
+      }
+    };
 
-  carregarFavoritos();
-
-  // Atualizar sempre que a tela voltar ao foco
-  const unsubscribe = navigation.addListener('focus', carregarFavoritos);
-
-  return unsubscribe;
-}, [navigation]);
-
+    carregarFavoritos();
+    const unsubscribe = navigation.addListener('focus', carregarFavoritos);
+    return unsubscribe;
+  }, [navigation]);
 
   const toggleFavorito = async (produto) => {
     const existe = favoritos.find((item) => item.id === produto.id);
@@ -78,6 +74,18 @@ export default function Home({ navigation }) {
   };
 
   const isFavorito = (id) => favoritos.some((item) => item.id === id);
+
+  const adicionarAoCarrinho = async (produto) => {
+    try {
+      const carrinhoJson = await AsyncStorage.getItem('carrinho');
+      let carrinho = carrinhoJson ? JSON.parse(carrinhoJson) : [];
+      carrinho.push(produto);
+      await AsyncStorage.setItem('carrinho', JSON.stringify(carrinho));
+      navigation.navigate('Carrinho');
+    } catch (error) {
+      console.log('Erro ao adicionar ao carrinho:', error);
+    }
+  };
 
   return (
     <SafeAreaView style={{ flex: 1, marginTop: StatusBar.currentHeight || 0 }}>
@@ -157,7 +165,7 @@ export default function Home({ navigation }) {
 
                 <TouchableOpacity
                   style={styles.comprarButton}
-                  onPress={() => navigation.navigate('Carrinho', { produto: item })}
+                  onPress={() => adicionarAoCarrinho(item)}
                 >
                   <Text style={styles.buttonText}>Comprar</Text>
                 </TouchableOpacity>
