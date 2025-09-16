@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Switch, TouchableOpacity, ScrollView, ImageBackground, Image, SafeAreaView, StatusBar, Alert } from 'react-native';
+import { 
+  View, Text, Switch, TouchableOpacity, ScrollView, 
+  ImageBackground, Image, SafeAreaView, StatusBar, Alert 
+} from 'react-native';
 import styles from './style'; 
 import Header from '../../components/Header';
 import InputField from '../../components/Input/index';
 import { loginUser } from '../../services/api';
-
 
 export default function Login({ navigation }) {
   const [login, setLogin] = useState('');
@@ -29,9 +31,16 @@ export default function Login({ navigation }) {
     try {
       const userData = { celular: login, senha };
       const response = await loginUser(userData);
-      Alert.alert('Sucesso', `Se sinta em casa, ${response.nome}!`, [
-        { text: 'OK', onPress: () => navigation.navigate('Home') },
-      ]);
+
+      if (response.tipo === 'admin') {
+        Alert.alert('Sucesso', 'Bem-vindo(a), administrador!', [
+          { text: 'OK', onPress: () => navigation.navigate('GestaoProdutos') }
+        ]);
+      } else {
+        Alert.alert('Sucesso', `Se sinta em casa, ${response.nome}!`, [
+          { text: 'OK', onPress: () => navigation.navigate('Home') }
+        ]);
+      }
     } catch (error) {
       Alert.alert('Erro', error.toString() || 'Falha na autenticação. Tente novamente.');
     }

@@ -2,11 +2,18 @@
   "usuarios": [
     {
       "id": 1,
-      "nome": "Bianca",
-      "celular": "11999999999",
+      "nome": "Admin",
+      "celular": "13997596685",
+      "senha": "admin123",
+      "tipo": "admin"
+    },
+    {
+      "id": 2,
+      "nome": "Maria",
+      "celular": "11988888888",
       "senha": "123456",
-      "preferencia": "doce"
-    }
+      "tipo": "cliente"
+}
   ],
   "produtos": [
     {

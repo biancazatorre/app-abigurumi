@@ -5,6 +5,7 @@ import Header from '../../components/Header';
 import { Picker } from '@react-native-picker/picker';
 import Slider from '@react-native-community/slider';
 import InputField from '../../components/Input/index';
+import { registerUser } from '../../services/api';
 
 
 

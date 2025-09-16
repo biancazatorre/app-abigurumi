@@ -1,8 +1,9 @@
-const BASE_URL = 'http://localhost:3000'; // ou o IP do seu PC se for testar no celular
+const BASE_URL = '192.168.0.34'; // ou o IP do seu PC se for testar no celular
 
 // ======= USUÁRIOS =======
 
 // Cadastrar usuário
+
 export const registerUser = async (userData) => {
   const response = await fetch(`${BASE_URL}/usuarios`, {
     method: 'POST',

@@ -12,6 +12,7 @@ import Leao from './src/pages/Leao/index';
 import Coelho from './src/pages/Coelho/index';
 import Sobre from './src/pages/Sobre/index';
 import Carrinho from './src/pages/Carrinho/index'
+import Admin from './src/pages/Admin';
 
 
 
@@ -34,6 +35,8 @@ export default function App() {
         <Stack.Screen name="Coelho" component={Coelho} />
         <Stack.Screen name="Sobre" component={Sobre} />
         <Stack.Screen name="Carrinho" component={Carrinho} />
+        <Stack.Screen name="Admin" component={Admin} />
+
 
       </Stack.Navigator>
     </NavigationContainer>
