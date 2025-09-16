@@ -1,0 +1,25 @@
+{
+  "usuarios": [
+    {
+      "id": 1,
+      "nome": "Bianca",
+      "celular": "11999999999",
+      "senha": "123456",
+      "preferencia": "doce"
+    }
+  ],
+  "produtos": [
+    {
+      "id": 1,
+      "nome": "Coelho",
+      "preco": "R$ 50,00",
+      "imagem": "COELHO.png"
+    },
+    {
+      "id": 2,
+      "nome": "Sereia",
+      "preco": "R$ 100,00",
+      "imagem": "SEREIA.png"
+    }
+  ]
+}
