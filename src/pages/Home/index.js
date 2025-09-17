@@ -1,14 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import {
-  View,
-  Text,
-  Image,
-  ImageBackground,
-  FlatList,
-  TouchableOpacity,
-  SafeAreaView,
-  StatusBar,
-} from 'react-native';
+import {View,Text,Image,ImageBackground,FlatList,TouchableOpacity,SafeAreaView,StatusBar,
+} 
+from 'react-native';
 import styles from './style';
 import galeriaStyles from '../../components/Carrossel/style';
 import Icon from 'react-native-vector-icons/FontAwesome';
