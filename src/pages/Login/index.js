@@ -14,37 +14,47 @@ export default function Login({ navigation }) {
   const [manterConectado, setManterConectado] = useState(false);
   const [menuVisible, setMenuVisible] = useState(false);
 
-  const handleLogin = async () => {
+  // Dentro do seu componente Login
+
+const handleLogin = async () => {
     if (!login) {
-      Alert.alert('Erro', 'O celular é obrigatório!');
-      return;
+        Alert.alert('Erro', 'O celular é obrigatório!');
+        return;
     }
-    if (login.replace(/[^0-9]/g, '').length !== 11) {
-      Alert.alert('Erro', 'O celular deve conter 11 dígitos (ex.: 11999999999)!');
-      return;
+    
+    // 👇 1. LIMPE O NÚMERO PRIMEIRO
+    const celularLimpo = login.replace(/\D/g, ''); 
+
+    // 👇 2. VALIDE O NÚMERO JÁ LIMPO
+    if (celularLimpo.length !== 11) {
+        Alert.alert('Erro', 'O celular deve conter 11 dígitos (ex.: 11999999999)!');
+        return;
     }
     if (!senha) {
-      Alert.alert('Erro', 'A senha é obrigatória!');
-      return;
+        Alert.alert('Erro', 'A senha é obrigatória!');
+        return;
     }
 
     try {
-      const userData = { celular: login, senha };
-      const response = await loginUser(userData);
+        // 👇 3. ENVIE O NÚMERO LIMPO PARA A API
+        const userData = { celular: celularLimpo, senha };
+        const response = await loginUser(userData);
 
-      if (response.tipo === 'admin') {
-        Alert.alert('Sucesso', 'Bem-vindo(a), administrador!', [
-          { text: 'OK', onPress: () => navigation.navigate('GestaoProdutos') }
-        ]);
-      } else {
-        Alert.alert('Sucesso', `Se sinta em casa, ${response.nome}!`, [
-          { text: 'OK', onPress: () => navigation.navigate('Home') }
-        ]);
-      }
+        // A lógica de resposta aqui está com um pequeno erro, vamos corrigir também.
+        // A API retorna um objeto { token, user }. A propriedade 'tipo' está dentro de 'user'.
+        if (response.user.tipo === 'admin') { 
+            Alert.alert('Sucesso', 'Bem-vindo(a), administrador!', [
+                { text: 'OK', onPress: () => navigation.navigate('Admin') }
+            ]);
+        } else {
+            Alert.alert('Sucesso', `Se sinta em casa, ${response.user.nome}!`, [
+                { text: 'OK', onPress: () => navigation.navigate('Home') }
+            ]);
+        }
     } catch (error) {
-      Alert.alert('Erro', error.toString() || 'Falha na autenticação. Tente novamente.');
+        Alert.alert('Erro', error.message || 'Falha na autenticação. Tente novamente.');
     }
-  };
+};
 
   return (
     <SafeAreaView style={{ flex: 1, marginTop: StatusBar.currentHeight || 0 }}>

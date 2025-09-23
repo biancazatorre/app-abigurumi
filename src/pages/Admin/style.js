@@ -1,105 +1,166 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Dimensions } from 'react-native';
 
-export default StyleSheet.create({
+const { width } = Dimensions.get('window');
+
+const styles = StyleSheet.create({
+  // --- Estrutura Principal ---
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#FFF' // Cor de fundo de segurança
+  },
   background: {
     flex: 1,
-    resizeMode: 'cover',
+    width: '100%',
+    height: '100%',
   },
   container: {
-    flexGrow: 1,
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    padding: 20,
+    paddingHorizontal: 20,
+    paddingBottom: 50, // Espaço extra no final da lista
   },
   logoContainer: {
     alignItems: 'center',
-    marginBottom: 20,
+    marginVertical: 20,
   },
   logo: {
-    width: 120,
-    height: 120,
+    width: 150,
+    height: 150,
     resizeMode: 'contain',
   },
-  cardLogin: {
-    backgroundColor: '#fff',
-    width: '100%',
-    borderRadius: 16,
+
+  // --- Formulário de Produto ---
+  cardLogin: { // Reutilizando estilo do card de login para o formulário
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    borderRadius: 15,
     padding: 20,
-    marginBottom: 20,
+    marginBottom: 30,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.15,
-    shadowRadius: 6,
-    elevation: 4,
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 3,
   },
   cardTitle: {
-    fontSize: 20,
+    fontSize: 22,
     fontWeight: 'bold',
-    color: '#333',
-    marginBottom: 15,
+    marginBottom: 20,
     textAlign: 'center',
+    color: '#333',
   },
   botaoEntrar: {
-    backgroundColor: '#E359EC',
-    paddingVertical: 12,
-    borderRadius: 25,
+    backgroundColor: '#E359EC', // Cor rosa/roxo do seu exemplo
+    padding: 15,
+    borderRadius: 10,
     alignItems: 'center',
     marginTop: 10,
   },
   botaoEntrarTexto: {
-    color: '#fff',
+    color: '#FFF',
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: 'bold',
   },
   sectionTitle: {
-    fontSize: 18,
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#444',
+    marginBottom: 15,
+    textAlign: 'center',
+  },
+
+  // --- Card de Produto na Lista (Baseado no Coelho.js) ---
+  card: { // Estilo principal para cada item da lista
+    backgroundColor: '#FFFFFF',
+    borderRadius: 15,
+    marginBottom: 20,
+    overflow: 'hidden', // Garante que a imagem não saia das bordas
+    elevation: 4,
+  },
+  produtoImagem: {
+    width: '100%',
+    height: 200,
+    resizeMode: 'cover',
+  },
+  imagemPlaceholder: { // Caso não tenha imagem
+    width: '100%',
+    height: 200,
+    backgroundColor: '#EEE',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  infoContainer: {
+    padding: 15,
+  },
+  textoContainer: {
+    marginBottom: 15,
+  },
+  nomeProduto: {
+    fontSize: 24,
     fontWeight: 'bold',
     color: '#333',
-    alignSelf: 'flex-start',
     marginBottom: 10,
   },
-  cardContainer: {
-    backgroundColor: '#fff',
-    borderRadius: 16,
-    padding: 15,
+  precoContainer: {
     marginBottom: 15,
-    width: '100%',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
   },
-  cardPrice: {
+  precoPix: {
+    fontSize: 18,
+    color: '#555',
+  },
+  pix: {
+    fontWeight: 'bold',
+    color: '#111',
+  },
+  precoParcelado: {
     fontSize: 14,
     color: '#666',
-    marginBottom: 10,
   },
-  buttonRow: {
+  descricaoTitulo: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#444',
+    marginTop: 10,
+  },
+  descricaoTexto: {
+    fontSize: 14,
+    color: '#666',
+    lineHeight: 20,
+  },
+
+  // --- Botões de Editar/Excluir no Card ---
+  botoesContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    marginTop: 10,
   },
-  verButton: {
-    backgroundColor: '#ADEEE8',
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    borderRadius: 20,
-    alignItems: 'center',
+  botaoComprar: { // Reutilizado para "Editar"
     flex: 1,
-    marginRight: 5,
-  },
-  comprarButton: {
-    backgroundColor: '#E359EC',
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    borderRadius: 20,
+    backgroundColor: '#28a745', // Verde
+    padding: 12,
+    borderRadius: 8,
+    marginRight: 10,
     alignItems: 'center',
+  },
+  botaoCarrinho: { // Reutilizado para "Excluir"
     flex: 1,
-    marginLeft: 5,
+    backgroundColor: '#dc3545', // Vermelho
+    padding: 12,
+    borderRadius: 8,
+    alignItems: 'center',
   },
-  buttonText: {
-    color: '#fff',
-    fontSize: 14,
-    fontWeight: '600',
+  textoComprar: { // Reutilizado para texto do botão de editar
+    color: '#FFF',
+    fontWeight: 'bold',
+    fontSize: 16,
   },
+  textoCarrinho: { // Reutilizado para texto do botão de excluir
+    color: '#FFF',
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+  
+  // --- Estilos de botões do exemplo Coelho.js que foram renomeados/reutilizados
+  // Mantive os nomes para referência, mas no código usei os de cima para clareza
+  // verButton: { ... }, 
+  // buttonText: { ... },
 });
+
+export default styles;
