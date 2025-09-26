@@ -1,91 +1,55 @@
+// services/api.js
+import axios from 'axios';
 
-const BASE_URL = 'http://192.168.0.34:5000/api'; 
+// 1. Defina a URL base. Lembre-se de usar seu IP real aqui.
+export const BASE_URL = 'http://192.168.0.34:5000'; // USE SEU IP ATUALIZADO AQUI
+
+// 2. Crie e EXPORTE a instância do Axios.
+// Esta é a parte que estava faltando.
+export const api = axios.create({
+  baseURL: `${BASE_URL}/api`,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
 
 // ======= USUÁRIOS =======
 
-// Cadastro
 export const registerUser = async (userData) => {
-  const response = await fetch(`${BASE_URL}/users/register`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(userData),
-  });
-
-  if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData.error || 'Erro ao cadastrar usuário');
-  }
-  return response.json();
+  const response = await api.post('/users/register', userData);
+  return response.data;
 };
 
-// Login
 export const loginUser = async (credentials) => {
-  const response = await fetch(`${BASE_URL}/users/login`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(credentials),
-  });
-
-  if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData.error || 'Usuário ou senha inválidos');
-  }
-  return response.json(); // Retorna { token, user }
+  const response = await api.post('/users/login', credentials);
+  return response.data; // Retorna { token, user }
 };
+
 
 // ======= PRODUTOS =======
 
-// Listar todos os produtos (público)
 export const getProdutos = async () => {
-  const response = await fetch(`${BASE_URL}/products`);
-  if (!response.ok) throw new Error('Erro ao buscar produtos');
-  return response.json();
+  const response = await api.get('/products');
+  return response.data;
 };
 
-// Criar produto (requer token de admin)
 export const createProduto = async (produtoData, token) => {
-  const response = await fetch(`${BASE_URL}/products`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`, // 4. Enviando o token para rotas protegidas
-    },
-    body: JSON.stringify(produtoData),
+  const response = await api.post('/products', produtoData, {
+    headers: { 'Authorization': `Bearer ${token}` },
   });
-  if (!response.ok) throw new Error('Erro ao criar produto');
-  return response.json();
+  return response.data;
 };
 
-// Atualizar produto (requer token de admin)
 export const updateProduto = async (id, produtoData, token) => {
-  const response = await fetch(`${BASE_URL}/products/${id}`, {
-    method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`, // 4. Enviando o token
-    },
-    body: JSON.stringify(produtoData),
+  const response = await api.put(`/products/${id}`, produtoData, {
+    headers: { 'Authorization': `Bearer ${token}` },
   });
-  if (!response.ok) throw new Error('Erro ao atualizar produto');
-  return response.json();
+  return response.data;
 };
 
-// Deletar produto (requer token de admin)
 export const deleteProduto = async (id, token) => {
-  const response = await fetch(`${BASE_URL}/products/${id}`, {
-    method: 'DELETE',
-    headers: {
-      'Authorization': `Bearer ${token}`, // 4. Enviando o token
-    },
+  const response = await api.delete(`/products/${id}`, {
+    headers: { 'Authorization': `Bearer ${token}` },
   });
-  if (!response.ok) throw new Error('Erro ao deletar produto');
-  return true;
-};
-
-export const getProdutoById = async (id) => {
-  const response = await fetch(`${BASE_URL}/products/${id}`);
-  if (!response.ok) throw new Error('Erro ao buscar detalhes do produto');
-  return response.json();
+  return response.data;
 };

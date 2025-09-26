@@ -14,6 +14,8 @@ import Sobre from './src/pages/Sobre/index';
 import Carrinho from './src/pages/Carrinho/index'
 import Admin from './src/pages/Admin';
 import Detalhes from './src/pages/Detalhes';
+import Lista from './src/pages/Lista';
+import ProductForm from './src/pages/ProductForm';
 
 
 
@@ -37,6 +39,8 @@ export default function App() {
         <Stack.Screen name="Carrinho" component={Carrinho} />
         <Stack.Screen name="Admin" component={Admin} />
         <Stack.Screen name="Detalhes" component={Detalhes} />
+        <Stack.Screen name="Lista" component={Lista} />
+        <Stack.Screen name="ProductForm" component={ProductForm} />
 
 
       </Stack.Navigator>

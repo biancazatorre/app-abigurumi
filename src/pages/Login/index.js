@@ -7,54 +7,57 @@ import styles from './style';
 import Header from '../../components/Header';
 import InputField from '../../components/Input/index';
 import { loginUser } from '../../services/api';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export default function Login({ navigation }) {
-  const [login, setLogin] = useState('');
+
+export default function Login({ navigation }) { // 'navigation' vindo das props
+  const [login, setLogin] = useState(''); // Estado para o campo de celular
   const [senha, setSenha] = useState('');
   const [manterConectado, setManterConectado] = useState(false);
   const [menuVisible, setMenuVisible] = useState(false);
+  // Se 'navigation' não vier das props, use a linha abaixo no lugar
+  // const navigation = useNavigation();
 
-  // Dentro do seu componente Login
-
-const handleLogin = async () => {
+  const handleLogin = async () => {
+    // 1. Validação dos campos
     if (!login) {
-        Alert.alert('Erro', 'O celular é obrigatório!');
-        return;
-    }
-    
-    // 👇 1. LIMPE O NÚMERO PRIMEIRO
-    const celularLimpo = login.replace(/\D/g, ''); 
-
-    // 👇 2. VALIDE O NÚMERO JÁ LIMPO
-    if (celularLimpo.length !== 11) {
-        Alert.alert('Erro', 'O celular deve conter 11 dígitos (ex.: 11999999999)!');
-        return;
+      Alert.alert('Erro', 'O celular é obrigatório!');
+      return;
     }
     if (!senha) {
-        Alert.alert('Erro', 'A senha é obrigatória!');
+      Alert.alert('Erro', 'A senha é obrigatória!');
+      return;
+    }
+
+    // 2. Limpeza do número de celular (remove máscara)
+    const celularLimpo = login.replace(/\D/g, '');
+    
+    if (celularLimpo.length !== 11 && celularLimpo.length !== 10) { // Aceita 10 ou 11 dígitos
+        Alert.alert('Erro', 'O celular deve conter 10 ou 11 dígitos!');
         return;
     }
 
     try {
-        // 👇 3. ENVIE O NÚMERO LIMPO PARA A API
-        const userData = { celular: celularLimpo, senha };
-        const response = await loginUser(userData);
+      // 3. Chama a API para tentar o login
+      const response = await loginUser({ celular: celularLimpo, senha: senha });
 
-        // A lógica de resposta aqui está com um pequeno erro, vamos corrigir também.
-        // A API retorna um objeto { token, user }. A propriedade 'tipo' está dentro de 'user'.
-        if (response.user.tipo === 'admin') { 
-            Alert.alert('Sucesso', 'Bem-vindo(a), administrador!', [
-                { text: 'OK', onPress: () => navigation.navigate('Admin') }
-            ]);
-        } else {
-            Alert.alert('Sucesso', `Se sinta em casa, ${response.user.nome}!`, [
-                { text: 'OK', onPress: () => navigation.navigate('Home') }
-            ]);
-        }
+      // --- CORREÇÃO IMPORTANTE ---
+      // 4. PRIMEIRO, salva o token e espera a operação terminar
+      await AsyncStorage.setItem('userToken', response.token);
+      await AsyncStorage.setItem('userData', JSON.stringify(response.user));
+
+      // 5. SÓ DEPOIS de salvar, navega para a tela correta
+      if (response.user.tipo === 'admin') {
+        navigation.navigate('Admin'); // Vai para o menu de admin
+      } else {
+        navigation.navigate('Home'); // Vai para a home de cliente
+      }
+
     } catch (error) {
-        Alert.alert('Erro', error.message || 'Falha na autenticação. Tente novamente.');
+      // Se a API retornar erro (ex: senha inválida), ele será capturado aqui
+      Alert.alert('Erro no Login', error.message || 'Falha na autenticação. Tente novamente.');
     }
-};
+  };
 
   return (
     <SafeAreaView style={{ flex: 1, marginTop: StatusBar.currentHeight || 0 }}>

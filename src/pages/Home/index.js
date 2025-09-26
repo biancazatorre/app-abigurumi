@@ -10,7 +10,7 @@ import Header from '../../components/Header/index';
 import ImageGallery from '../../components/Carrossel/index';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getProdutos } from '../../services/api'; 
-import imageMap from '../../components/MapaImages';
+import imageMap from '../../components/MapaImages.js';
 
 const banners = [
     require('../../../assets/images/banner.png'),
