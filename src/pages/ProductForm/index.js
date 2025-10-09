@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, SafeAreaView, Alert, ActivityIndicator, ScrollView, Image, Platform, ImageBackground, StatusBar } from 'react-native';
+import { View, Text, TouchableOpacity, SafeAreaView, Alert, ActivityIndicator, ScrollView, KeyboardAvoidingView, Image, Platform, ImageBackground, StatusBar } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as ImagePicker from 'expo-image-picker';
 import styles from './style';
@@ -33,17 +33,39 @@ export default function ProductForm({ route, navigation }) {
         })();
     }, []);
 
-    const handleAnexarImagem = async () => {
+   const handleAnexarImagem = async () => {
+    console.log('--- Iniciando handleAnexarImagem ---');
 
-        console.log('Botão de anexar imagem clicado!');
+    // Etapa de Permissão
+    try {
+        const permissionResponse = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (permissionResponse.granted === false) {
+            Alert.alert('Permissão Negada', 'Para anexar uma imagem, você precisa permitir o acesso à galeria.');
+            console.log('Permissão foi negada pelo usuário.');
+            return;
+        }
+        console.log('Permissão concedida, prosseguindo...');
+    } catch (err) {
+        console.error('Erro ao PEDIR permissão:', err);
+        Alert.alert('Erro', 'Houve um problema ao solicitar permissão para a galeria.');
+        return;
+    }
+
+    // Etapa de Abrir a Galeria
+    try {
+        console.log('Tentando abrir a galeria de imagens...');
         let result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaType.Images,
+            mediaTypes: 'Images',
             allowsEditing: true,
             aspect: [4, 3],
             quality: 1,
         });
 
+        // Imprime o resultado, seja ele qual for
+        console.log('Resultado do ImagePicker:', JSON.stringify(result, null, 2));
+
         if (!result.canceled) {
+            console.log('Imagem selecionada. Iniciando upload...');
             const uri = result.assets[0].uri;
             const formData = new FormData();
             formData.append('image', {
@@ -51,21 +73,23 @@ export default function ProductForm({ route, navigation }) {
                 name: `photo_${Date.now()}.jpg`,
                 type: 'image/jpeg',
             });
+            
+            setLoading(true);
+            const response = await api.post('/upload', formData, {
+                headers: { 'Content-Type': 'multipart/form-data' },
+            });
+            setImagemUrl(response.data.imageUrl);
+            setLoading(false);
 
-            try {
-                setLoading(true);
-                const response = await api.post('/upload', formData, {
-                    headers: { 'Content-Type': 'multipart/form-data' },
-                });
-                setImagemUrl(response.data.imageUrl);
-            } catch (error) {
-                console.error("Erro no upload:", error.response?.data || error.message);
-                Alert.alert('Erro', 'Não foi possível enviar a imagem.');
-            } finally {
-                setLoading(false);
-            }
+        } else {
+            console.log('Usuário cancelou a seleção de imagem.');
         }
-    };
+    } catch (err) {
+        console.error('!!! ERRO CRÍTICO ao tentar abrir a galeria ou fazer upload:', err);
+        Alert.alert('Erro Inesperado', 'Não foi possível abrir a galeria ou processar a imagem.');
+        setLoading(false);
+    }
+};
 
     const handleSalvar = async () => {
         if (!nome || !preco || !imagemUrl) {
@@ -91,6 +115,7 @@ export default function ProductForm({ route, navigation }) {
     };
 
     return (
+        
         <SafeAreaView style={{ flex: 1, marginTop: StatusBar.currentHeight || 0 }}>
             <ImageBackground
                 source={require('../../../assets/images/fundo.png')}
@@ -101,6 +126,10 @@ export default function ProductForm({ route, navigation }) {
                     menuVisible={menuVisible}
                     setMenuVisible={setMenuVisible}
                 />
+                  <KeyboardAvoidingView
+                    behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+                    style={{ flex: 1 }}
+                >
                 <ScrollView contentContainerStyle={styles.container}>
                     <Text style={styles.title}>{isEditing ? 'Editar Produto' : 'Novo Produto'}</Text>
                     
@@ -122,6 +151,8 @@ export default function ProductForm({ route, navigation }) {
                         {loading ? <ActivityIndicator color="#FFF" /> : <Text style={styles.saveButtonText}>{isEditing ? 'Atualizar Produto' : 'Cadastrar Produto'}</Text>}
                     </TouchableOpacity>
                 </ScrollView>
+                </KeyboardAvoidingView>
+
             </ImageBackground>
         </SafeAreaView>
     );

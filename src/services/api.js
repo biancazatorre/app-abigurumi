@@ -33,6 +33,16 @@ export const getProdutos = async () => {
   return response.data;
 };
 
+export const getProdutoById = async (id) => {
+  try {
+    const response = await api.get(`/products/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error(`Erro ao buscar produto com id ${id}:`, error);
+    throw error;
+  }
+};
+
 export const createProduto = async (produtoData, token) => {
   const response = await api.post('/products', produtoData, {
     headers: { 'Authorization': `Bearer ${token}` },
@@ -52,4 +62,6 @@ export const deleteProduto = async (id, token) => {
     headers: { 'Authorization': `Bearer ${token}` },
   });
   return response.data;
+
+  
 };

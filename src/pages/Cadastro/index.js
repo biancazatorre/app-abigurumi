@@ -19,12 +19,16 @@ export default function Cadastro({ navigation }) {
   const [menuVisible, setMenuVisible] = useState(false);
 
   const handleRegister = async () => {
+    // 👇 1. ADICIONAMOS ESTA LINHA para limpar o número
+    const celularLimpo = celular.replace(/\D/g, '');
+
     // Validações
     if (!nome.trim()) {
       Alert.alert('Erro', 'O nome é obrigatório!');
       return;
     }
-    if (!celular || celular.replace(/[^0-9]/g, '').length !== 11) {
+    // Usamos a variável 'celularLimpo' para validar
+    if (!celularLimpo || celularLimpo.length !== 11) {
       Alert.alert('Erro', 'O celular deve conter 11 dígitos!');
       return;
     }
@@ -43,7 +47,7 @@ export default function Cadastro({ navigation }) {
 
     try {
       const userData = {
-        celular,
+        celular: celularLimpo,
         nome,
         dataNascimento,
         senha,
@@ -55,7 +59,9 @@ export default function Cadastro({ navigation }) {
         { text: 'OK', onPress: () => navigation.navigate('Login') },
       ]);
     } catch (error) {
-      Alert.alert('Erro', error.toString() || 'Algo deu errado. Tente novamente!');
+      // Melhoramos a mensagem de erro para ser mais específica
+      const errorMessage = error.response?.data?.error || error.message || 'Algo deu errado. Tente novamente!';
+      Alert.alert('Erro no Cadastro', errorMessage);
     }
   };
 
@@ -93,6 +99,8 @@ export default function Cadastro({ navigation }) {
               value={dataNascimento}
               onChangeText={setDataNascimento}
               keyboardType="numeric"
+              mask="date"       // 👈 Adicione esta linha
+              maxLength={10}     // 👈 Adicione esta linha (DD/MM/AAAA tem 10 caracteres)
             />
 
             <InputField

@@ -1,18 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import {
-  View,
-  Text,
-  Image,
-  ScrollView,
-  TouchableOpacity,
-  ImageBackground,
-  SafeAreaView,
-  StatusBar,
-} from 'react-native';
+import {View,Text,Image,ScrollView,TouchableOpacity,ImageBackground,SafeAreaView,StatusBar,} from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import styles from './style';
 import Header from '../../components/Header';
+import { BASE_URL } from '../../services/api';
+
 
 export default function Favoritos({ navigation }) {
   const [menuVisible, setMenuVisible] = useState(false);
@@ -52,7 +45,7 @@ export default function Favoritos({ navigation }) {
 
           {produtosFavoritos.map((item) => (
             <View key={item.id} style={styles.card}>
-              <Image source={item.imagem} style={styles.imagem} />
+              <Image source={{ uri: `${BASE_URL}${item.imagem_url}` }} style={styles.imagem} />
               <View style={styles.infoContainer}>
                 <Text style={styles.nome}>{item.nome}</Text>
                 <Text style={styles.preco}>{item.preco}</Text>

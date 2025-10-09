@@ -13,11 +13,22 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff",
-        "usesCleartextTraffic": true
-      }
+        "usesCleartextTraffic": true,
+        "queries": [
+        {
+          "package": "com.whatsapp"
+        }
+      ]
+      },
+      "package": "com.biancazatorre.tccApp"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "5ea75462-c900-4938-b420-e04b1db621f5"
+      }
     }
   }
 }

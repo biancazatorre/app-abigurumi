@@ -71,7 +71,8 @@ export default StyleSheet.create({
     width: 100,
     height: 100,
     borderRadius: 10,
-    resizeMode: 'contain',
+    overflow: 'hidden',
+    resizeMode: 'cover',
     backgroundColor: '#fff',
   },
   cardInfo: {
@@ -120,6 +121,23 @@ export default StyleSheet.create({
   buttonText: {
     color: '#fff',
     fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  toastContainer: {
+    position: 'absolute',
+    bottom: 50,
+    left: 20,
+    right: 20,
+    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+    borderRadius: 25,
+    padding: 15,
+    alignItems: 'center',
+    justifyContent: 'center',
+    elevation: 10,
+  },
+  toastText: {
+    color: '#FFFFFF',
+    fontSize: 16,
     textAlign: 'center',
   },
 });
